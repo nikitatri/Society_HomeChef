@@ -31,12 +31,10 @@ app.use("/api/rider", riderRoutes);
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
-// ✅ Static frontend serve (AFTER routes)
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "../dist")));
 
-// ✅ SPA fallback (LAST)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 // ✅ Error handler
