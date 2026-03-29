@@ -1,6 +1,6 @@
 # Society HomeChef — MVP
 
-Hyperlocal food ordering for neighborhoods and gated communities: **Chefs** list dishes, **Residents** order from their local feed, **Riders** deliver. Stack: **React (Vite) + Tailwind**, **Express + MongoDB**, **JWT**, **Multer** (local `uploads/`), heuristic **nutrition** (no external AI API).
+Hyperlocal food ordering for neighborhoods and gated communities: **Chefs** list dishes, **Residents** order from their local feed, **Riders** deliver. Stack: **React (Vite) + Tailwind**, **Express + MongoDB**, **JWT**, Cloudinary uploads, heuristic **nutrition** (no external AI API).
 
 ---
 
@@ -13,7 +13,7 @@ Hyperlocal food ordering for neighborhoods and gated communities: **Chefs** list
 | **React SPA** | Role-specific dashboards, JWT in `localStorage`, REST calls to API |
 | **Express API** | Auth, validation, business rules, static media |
 | **MongoDB** | Users, dishes, orders |
-| **Uploads folder** | Images/videos served at `/uploads/*` |
+| **Uploads folder** | Images/videos served at cloudinary |
 
 ```mermaid
 flowchart LR
@@ -24,7 +24,6 @@ flowchart LR
   subgraph api [Express]
     C[JWT middleware]
     D[Controllers]
-    E[Multer]
   end
   subgraph data [MongoDB]
     F[(Users Dishes Orders)]
@@ -83,9 +82,6 @@ flowchart LR
 
 ---
 
-## 3. Backend APIs
-
-Base URL: `http://localhost:5050` by default (`PORT` in `backend/.env`; Vite proxies `/api` there in dev).
 
 ### Auth (`/api/auth`)
 
@@ -124,7 +120,6 @@ Base URL: `http://localhost:5050` by default (`PORT` in `backend/.env`; Vite pro
 
 ### Static
 
-- `GET /uploads/:file` — uploaded media  
 - `GET /health` — liveness
 
 ---
@@ -216,7 +211,7 @@ App: `http://localhost:5173`
 1. **Models** — User, Dish, Order with society + roles.  
 2. **Auth** — bcrypt + JWT; middleware for role routes.  
 3. **Nutrition util** — keyword rules + tags.  
-4. **Chef routes** — Multer upload + dish CRUD + analytics aggregation.  
+4. **Chef routes** — cloudinary upload + dish CRUD + analytics aggregation.  
 5. **Customer routes** — society feed + filters + place order + rider assignment (Haversine).  
 6. **Rider routes** — availability + accept + status transitions.  
 7. **Frontend** — Vite React, Tailwind, Router, AuthContext, three dashboards.  

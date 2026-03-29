@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { api, mediaUrl } from "../api/client.js";
-import DashboardHero, { DASHBOARD_IMAGES } from "../components/DashboardHero.jsx";
+import DashboardHero, {
+  DASHBOARD_IMAGES,
+} from "../components/DashboardHero.jsx";
 
 export default function ChefDashboard() {
   const [dishes, setDishes] = useState([]);
@@ -35,7 +37,13 @@ export default function ChefDashboard() {
     if (form.media) fd.append("media", form.media);
     try {
       await api.createDish(fd);
-      setForm({ name: "", price: "", quantity: "", published: true, media: null });
+      setForm({
+        name: "",
+        price: "",
+        quantity: "",
+        published: true,
+        media: null,
+      });
       await load();
       setMsg("Dish published.");
     } catch (err) {
@@ -85,7 +93,9 @@ export default function ChefDashboard() {
 
       {analytics?.topDishes?.length > 0 && (
         <section>
-          <h2 className="font-semibold text-slate-900 mb-2">Top dishes (units sold)</h2>
+          <h2 className="font-semibold text-slate-900 mb-2">
+            Top dishes (units sold)
+          </h2>
           <ul className="text-sm text-slate-600 space-y-1">
             {analytics.topDishes.map((t) => (
               <li key={String(t._id)}>
@@ -113,7 +123,9 @@ export default function ChefDashboard() {
               type="number"
               placeholder="Price ₹"
               value={form.price}
-              onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, price: e.target.value }))
+              }
               required
               min="0"
             />
@@ -122,7 +134,9 @@ export default function ChefDashboard() {
               type="number"
               placeholder="Quantity"
               value={form.quantity}
-              onChange={(e) => setForm((f) => ({ ...f, quantity: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, quantity: e.target.value }))
+              }
               required
               min="0"
             />
@@ -131,16 +145,23 @@ export default function ChefDashboard() {
             <input
               type="checkbox"
               checked={form.published}
-              onChange={(e) => setForm((f) => ({ ...f, published: e.target.checked }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, published: e.target.checked }))
+              }
             />
             Published to society feed
           </label>
           <input
             type="file"
             accept="image/*,video/*"
-            onChange={(e) => setForm((f) => ({ ...f, media: e.target.files?.[0] || null }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, media: e.target.files?.[0] || null }))
+            }
           />
-          <button type="submit" className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 transition-colors text-white font-medium">
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 transition-colors text-white font-medium"
+          >
             Save dish
           </button>
         </form>
@@ -150,14 +171,28 @@ export default function ChefDashboard() {
         <h2 className="font-semibold text-slate-900 mb-4">Your dishes</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {dishes.map((d) => (
-            <div key={d._id} className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-              {d.imageUrl && (
-                <img src={mediaUrl(d.imageUrl)} alt="" className="h-36 w-full object-cover" />
-              )}
+            <div
+              key={d._id}
+              className="border border-slate-200 rounded-2xl overflow-hidden bg-white"
+            >
+              {d.videoUrl ? (
+                <video
+                  src={d.videoUrl}
+                  className="h-36 w-full object-cover"
+                  controls
+                />
+              ) : d.imageUrl ? (
+                <img
+                  src={d.imageUrl}
+                  alt=""
+                  className="h-36 w-full object-cover"
+                />
+              ) : null}
               <div className="p-4 space-y-2">
                 <h3 className="font-medium">{d.name}</h3>
                 <p className="text-sm text-slate-500">
-                  ₹{d.price} · qty {d.quantity} · {d.calories} kcal · health {d.healthScore}/10
+                  ₹{d.price} · qty {d.quantity} · {d.calories} kcal · health{" "}
+                  {d.healthScore}/10
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <button

@@ -14,7 +14,9 @@ export async function createDish(req, res) {
       return res.status(400).json({ message: "name, price, quantity required" });
     }
 
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
+    const isFileVideo = req.file?.mimetype.startsWith("video");
+    const fileUrl = req.file ? req.file.path : "";
+
     const { calories, healthScore } = computeNutrition(name);
     const autoTags = deriveTagsFromName(name);
     let manualTags = [];
@@ -34,8 +36,8 @@ export async function createDish(req, res) {
       name: name.trim(),
       price: Number(price),
       quantity: Number(quantity),
-      imageUrl,
-      videoUrl: videoUrl || "",
+      imageUrl: isFileVideo ? "" : fileUrl,
+      videoUrl: isFileVideo ? fileUrl : (videoUrl || ""),
       published: published === true || published === "true",
       soldOut: false,
       tags,
@@ -72,7 +74,17 @@ export async function updateDish(req, res) {
     if (published != null) dish.published = published === true || published === "true";
     if (soldOut != null) dish.soldOut = soldOut === true || soldOut === "true";
     if (videoUrl != null) dish.videoUrl = videoUrl;
-    if (req.file) dish.imageUrl = `/uploads/${req.file.filename}`;
+
+    if (req.file) {
+      const isFileVideo = req.file.mimetype.startsWith("video");
+      if (isFileVideo) {
+        dish.videoUrl = req.file.path;
+        dish.imageUrl = ""; // Clear image if we now have a video
+      } else {
+        dish.imageUrl = req.file.path;
+        dish.videoUrl = ""; // Clear video if we now have an image
+      }
+    }
 
     await dish.save();
     res.json(dish);
